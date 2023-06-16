@@ -8,15 +8,17 @@ server.use(express.json());
 //
 
 mongoose
-  .connect(
-    "mongodb+srv://musab:8RNngQeVDJNhsh8M@sub.ya0nbol.mongodb.net/?retryWrites=true&w=majority"
-  )
+  .connect(process.env.DB)
   .then(() => {
     console.log("database connected successfully");
   })
   .catch((e) => {
     console.log(e);
   });
+
+// MODELS
+const Subscription = require("./models/Subscription");
+const Folder = require("./models/Folder");
 
 server.get("/", (req, res) => {
   res.status(200).json({ success: "server is running" });

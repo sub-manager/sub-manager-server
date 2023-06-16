@@ -16,6 +16,10 @@ mongoose
     console.log(e);
   });
 
+// MODELS
+const Subscription = require("./models/Subscription");
+const Folder = require("./models/Folder");
+
 server.get("/", (req, res) => {
   res.status(200).json({ success: "server is running" });
 });

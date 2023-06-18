@@ -8,9 +8,11 @@ const verifyToken = (req, res, next) => {
     jwt.verify(token, process.env.JWT_TOKEN, (err, decodedToken) => {
       if (err) {
         console.log(e.message);
-        res.redirect("/api/user/login");
+        res.json({ error: "invalid token" });
+        // res.redirect("/api/user/login");
       } else {
         console.log(decodedToken);
+        // res.json(decodedToken);
         next();
       }
     });

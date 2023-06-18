@@ -1,22 +1,32 @@
 const User = require("../models/User");
 const Subscription = require("../models/Subscription");
-const Folder = require("../models/User");
+const Category = require("../models/Category");
 const jwt = require("jsonwebtoken");
 
 module.exports = {
   //
-  test: (req, res) => {
-    res.json("hi test");
-  },
 
   //
   addSubscription: async (req, res) => {
-    const { providerName, isRenew, date, folderInfo } = req.body;
     const newSub = await Subscription.create({
-      providerName,
-      isRenew,
-      date,
+      user: res.locals.user._id,
+      providerName: req.body.providerName,
+      isRenew: req.body.isRenew,
+      date: req.body.date,
     });
+
+    await User.findByIdAndUpdate(res.locals.user._id, {
+      $addToSet: {
+        subscription: newSub._id,
+      },
+    });
+
+    await Category.findByIdAndUpdate(req.body.categoryId, {
+      $addToSet: {
+        subscriptionInfo: newSub._id,
+      },
+    });
+
     res.json({ newSub });
   },
 };

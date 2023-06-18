@@ -1,8 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
-
+const cookieParser = require("cookie-parser");
 const server = express();
+const bodyParser = require("body-parser");
+server.use(bodyParser.urlencoded({ extended: true }));
+
 server.use(express.json());
 
 const JWT = require("jsonwebtoken");
@@ -25,8 +28,10 @@ mongoose
 // MODELS
 const User = require("./models/User");
 const Subscription = require("./models/Subscription");
-const Folder = require("./models/Folder");
+const Category = require("./models/Category");
 const verifyToken = require("./middleware/verifyToken");
+server.use(cookieParser());
+
 // USER ROUTER - API
 const authRouter = require("./routes/authRoutes");
 server.use("/api/user", authRouter);

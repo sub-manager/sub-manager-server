@@ -154,7 +154,7 @@ module.exports = {
           token,
         });
       } catch (e) {
-        res.status(400).json({ errorMessage: "error" });
+        res.status(400).json({ errorMessage: e });
       }
     };
     createUserAccount();

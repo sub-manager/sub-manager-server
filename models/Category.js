@@ -1,12 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const folderSchema = new Schema({
-  folderName: {
-    type: String,
-    require: true,
-  },
-  description: {
+const categorySchema = new Schema({
+  categoryName: {
     type: String,
     require: true,
   },
@@ -18,5 +14,5 @@ const folderSchema = new Schema({
   ],
 });
 
-const Folder = mongoose.model("Folder", folderSchema);
-module.exports = Folder;
+const Category = mongoose.model("Category", categorySchema);
+module.exports = Category;

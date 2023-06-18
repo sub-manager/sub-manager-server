@@ -22,6 +22,12 @@ const userSchema = new Schema(
       require: true,
       min: [5, "password must be atleast 3 charachters"],
     },
+    subscription: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Subscription",
+      },
+    ],
   },
   {
     timestamps: true,

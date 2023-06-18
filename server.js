@@ -26,11 +26,15 @@ mongoose
 const User = require("./models/User");
 const Subscription = require("./models/Subscription");
 const Folder = require("./models/Folder");
-
+const verifyToken = require("./middleware/verifyToken");
 // USER ROUTER - API
 const authRouter = require("./routes/authRoutes");
 server.use("/api/user", authRouter);
 
+const postRouter = require("./routes/postsRoutes");
+server.use("/api/post", postRouter);
+
+//
 server.get("/", (req, res) => {
   res.status(200).json({ success: "server is running" });
 });
@@ -189,7 +193,7 @@ server.post("/register", (req, res) => {
   createUserAccount();
 });
 
-server.post("/login", (req, res) => {
+server.post("/login", verifyToken, (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 

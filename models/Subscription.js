@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const subscriptionSchema = new Schema({
+  // user: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "User",
+  // },
   providerName: {
     type: String,
     require: true,
@@ -14,12 +18,12 @@ const subscriptionSchema = new Schema({
     type: Date,
     require: true,
   },
-  folderInfo: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Folder",
-    },
-  ],
+  // folderInfo: [
+  //   {
+  //     type: Schema.Types.ObjectId,
+  //     ref: "Folder",
+  //   },
+  // ],
 });
 
 const Subscription = mongoose.model("Subscription", subscriptionSchema);

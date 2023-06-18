@@ -9,5 +9,10 @@ router.use(bodyParser.json());
 
 // #REGISTRATION ROUTE
 router.get("/test", postsController.addSubscription);
+// #REGISTRATION ROUTE - API
+router.post("/signup", userController.register);
+
+// #LOGIN ROUTE - API
+router.post("/signin", userController.login);
 
 module.exports = router;

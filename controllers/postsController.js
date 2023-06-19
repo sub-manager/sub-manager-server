@@ -7,8 +7,10 @@ module.exports = {
   //
 
   getSubscription: async (req, res) => {
-    const dd = await Subscription.find();
-    res.json(dd);
+    const user = await User.findById(res.locals.user._id).populate(
+      "subscription"
+    );
+    res.json(user);
   },
   //
   addSubscription: async (req, res) => {

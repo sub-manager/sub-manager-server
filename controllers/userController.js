@@ -11,6 +11,7 @@ const saltRounds = Number(saltRound);
 module.exports = {
   // USER REGISTRATION - API
   register: (req, res) => {
+    console.log(req.body);
     const username = req.body.username;
     const email = req.body.email;
     const phone = req.body.phone;
@@ -24,91 +25,94 @@ module.exports = {
       }
     };
 
-    const isEmail = (Email) => {
-      let splitElements = Email.split("");
-
-      let atIndex = splitElements.indexOf("@");
-      let dotIndex = splitElements.indexOf(".");
-
-      splitElements.splice(atIndex + 1, 0, "-");
-      splitElements.splice(atIndex, 0, "-");
-
-      splitElements.splice(dotIndex + 3, 0, "-");
-      splitElements.splice(dotIndex + 2, 0, "-");
-
-      let toString = splitElements.join("");
-      let emailSections = toString.split("-");
-
-      let lettersAndNumbers = [
-        "A",
-        "B",
-        "C",
-        "D",
-        "E",
-        "F",
-        "G",
-        "H",
-        "I",
-        "J",
-        "K",
-        "L",
-        "M",
-        "N",
-        "O",
-        "P",
-        "Q",
-        "R",
-        "S",
-        "T",
-        "U",
-        "V",
-        "W",
-        "X",
-        "Y",
-        "Z",
-        "0",
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-      ];
-      let symbols = ["-", ".", "_"];
-
-      let firstIndex = [];
-      let toLower = emailSections[0].toLowerCase();
-
-      for (item of lettersAndNumbers) {
-        if (toLower.startsWith(item.toLowerCase())) {
-          firstIndex.push(item.toLowerCase());
-        }
-      }
-
-      if (emailSections[2] == "" || emailSections[2] == " ") {
-        return false;
-      } else if (!emailSections[3].includes(".")) {
-        return false;
-      } else if (!emailSections[4].includes("com")) {
-        return false;
-      }
-
-      let firstLitter = firstIndex.toString();
-      if (toLower[0] == firstLitter) {
-        return true;
-      } else if (toLower[0] != firstLitter) {
-        return false;
-      }
-
-      for (atCheck of emailSections[1]) {
-        if (atCheck != "@") {
-          return false;
-        }
-      }
+    const isEmail = (email) => {
+      return email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
     };
+    // const isEmail = (Email) => {
+    //   let splitElements = Email.split(" ");
+
+    //   let atIndex = splitElements.indexOf("@");
+    //   let dotIndex = splitElements.indexOf(".");
+
+    //   splitElements.splice(atIndex + 1, 0, "-");
+    //   splitElements.splice(atIndex, 0, "-");
+
+    //   splitElements.splice(dotIndex + 3, 0, "-");
+    //   splitElements.splice(dotIndex + 2, 0, "-");
+
+    //   let toString = splitElements.join("");
+    //   let emailSections = toString.split("-");
+
+    //   let lettersAndNumbers = [
+    //     "A",
+    //     "B",
+    //     "C",
+    //     "D",
+    //     "E",
+    //     "F",
+    //     "G",
+    //     "H",
+    //     "I",
+    //     "J",
+    //     "K",
+    //     "L",
+    //     "M",
+    //     "N",
+    //     "O",
+    //     "P",
+    //     "Q",
+    //     "R",
+    //     "S",
+    //     "T",
+    //     "U",
+    //     "V",
+    //     "W",
+    //     "X",
+    //     "Y",
+    //     "Z",
+    //     "0",
+    //     "1",
+    //     "2",
+    //     "3",
+    //     "4",
+    //     "5",
+    //     "6",
+    //     "7",
+    //     "8",
+    //     "9",
+    //   ];
+    //   let symbols = ["-", ".", "_"];
+
+    //   let firstIndex = [];
+    //   let toLower = emailSections[0].toLowerCase();
+
+    //   for (item of lettersAndNumbers) {
+    //     if (toLower.startsWith(item.toLowerCase())) {
+    //       firstIndex.push(item.toLowerCase());
+    //     }
+    //   }
+
+    //   if (emailSections[2] == "" || emailSections[2] == " ") {
+    //     return false;
+    //   } else if (!emailSections[3].includes(".")) {
+    //     return false;
+    //   } else if (!emailSections[4].includes("com")) {
+    //     return false;
+    //   }
+
+    //   let firstLitter = firstIndex.toString();
+    //   if (toLower[0] == firstLitter) {
+    //     return true;
+    //   } else if (toLower[0] != firstLitter) {
+    //     return false;
+    //   }
+
+    //   for (atCheck of emailSections[1]) {
+    //     if (atCheck != "@") {
+    //       return false;
+    //     }
+    //   }
+    // };
 
     if (isEmail(email) == false) {
       res

@@ -1,19 +1,19 @@
 const router = require("express").Router();
 const postsController = require("../controllers/postsController");
-const { verifyUser, checkUser } = require("../middleware/verifyUser");
+const { verifyUser } = require("../middleware/verifyUser");
 //
 
 //
 
-router.get("/subs", checkUser, postsController.getSubscription);
-router.post("/add", checkUser, postsController.addSubscription);
+router.get("/subscriptions", verifyUser, postsController.getSubscription);
+router.post("/add", verifyUser, postsController.addSubscription);
 
 router.delete(
   "/deleteSub/:subId",
-  checkUser,
+  verifyUser,
   postsController.deleteSubscription
 );
 
-router.put("/updateSub/:subId", checkUser, postsController.updateSubscription);
+router.put("/updateSub/:subId", verifyUser, postsController.updateSubscription);
 
 module.exports = router;

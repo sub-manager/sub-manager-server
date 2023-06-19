@@ -29,4 +29,14 @@ module.exports = {
 
     res.json({ newSub });
   },
+
+  deleteSubscription: async (req, res) => {
+    const deletedSub = await Subscription.findByIdAndDelete(req.params.subId);
+    await User.findByIdAndUpdate(res.locals.user._id, {
+      $pull: {
+        subscription: deletedSub._id,
+      },
+    });
+    res.json(deletedSub);
+  },
 };

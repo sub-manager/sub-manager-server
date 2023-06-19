@@ -6,6 +6,10 @@ const jwt = require("jsonwebtoken");
 module.exports = {
   //
 
+  getSubscription: async (req, res) => {
+    const dd = await Subscription.find();
+    res.json(dd);
+  },
   //
   addSubscription: async (req, res) => {
     const newSub = await Subscription.create({
@@ -38,5 +42,15 @@ module.exports = {
       },
     });
     res.json(deletedSub);
+  },
+
+  updateSubscription: async (req, res) => {
+    const updatedSub = await Subscription.findByIdAndUpdate(req.params.subId, {
+      providerName: req.body.providerName,
+      isRenew: req.body.isRenew,
+      date: req.body.date,
+    });
+
+    res.json(updatedSub);
   },
 };

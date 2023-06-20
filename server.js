@@ -2,13 +2,18 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 const server = express();
 const bodyParser = require("body-parser");
 server.use(bodyParser.urlencoded({ extended: true }));
 
 server.use(express.json());
-const cors = require("cors");
-server.use(cors());
+
+server.use(
+  cors({
+    origin: "*",
+  })
+);
 const JWT = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 

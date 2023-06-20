@@ -5,6 +5,7 @@ const { verifyUser } = require("../middleware/verifyUser");
 
 //
 
+router.get("/subscriptions", verifyUser, postsController.getSubscription);
 router.post("/add", verifyUser, postsController.addSubscription);
 
 router.delete(
@@ -12,5 +13,7 @@ router.delete(
   verifyUser,
   postsController.deleteSubscription
 );
+
+router.put("/updateSub/:subId", verifyUser, postsController.updateSubscription);
 
 module.exports = router;

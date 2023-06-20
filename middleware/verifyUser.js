@@ -5,6 +5,8 @@ const dotenv = require("dotenv").config();
 const verifyUser = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
+  const token = authHeader?.split(" ")[1];
+
   const token = authHeader.split("")[1];
   console.log(token);
   if (!token) return res.status(401).send("Access Denied");
@@ -14,7 +16,6 @@ const verifyUser = async (req, res, next) => {
 
     let user = await User.findById(decodedToken.user.id);
     res.locals.user = user;
-    console.log(res.locals.user._id);
     next();
   } catch (error) {
     console.log(error);

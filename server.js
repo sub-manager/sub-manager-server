@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 server.use(bodyParser.urlencoded({ extended: true }));
 
 server.use(express.json());
+
 server.use(
   cors({
     origin: "*",
@@ -43,6 +44,10 @@ server.use("/api/user", authRouter);
 const postRouter = require("./routes/postsRoutes");
 server.use("/api/post", postRouter);
 
+// CATEGORY ROUTE - API
+const categoryRouter = require("./routes/categoryRoutes");
+server.use("/api/category", categoryRouter);
+
 //
 server.get("/", (req, res) => {
   res.status(200).json({ success: "server is running" });
@@ -62,8 +67,6 @@ server.post("/auth/signup", async (req, res) => {
 
 // login user
 server.post("/auth/login", (req, res) => {});
-
-//add subscription
 
 server.listen(process.env.PORT, () => {
   console.log(`server is up and running on port: ${process.env.PORT}`);

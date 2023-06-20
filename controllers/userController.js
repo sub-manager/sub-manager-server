@@ -140,7 +140,7 @@ module.exports = {
               username: userCreated.username,
             },
           },
-          process.env.SECRET,
+          process.env.JWT_TOKEN,
           { expiresIn: "12h" }
         );
 
@@ -185,7 +185,7 @@ module.exports = {
               phone: foundUser.phone,
             },
           },
-          process.env.SECRET,
+          process.env.JWT_TOKEN,
           { expiresIn: "12h" }
         );
 

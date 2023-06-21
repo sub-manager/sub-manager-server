@@ -11,7 +11,6 @@ const saltRounds = Number(saltRound);
 module.exports = {
   // USER REGISTRATION - API
   register: (req, res) => {
-    console.log(req.body);
     const username = req.body.username;
     const email = req.body.email;
     const phone = req.body.phone;

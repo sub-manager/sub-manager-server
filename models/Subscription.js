@@ -19,11 +19,15 @@ const subscriptionSchema = new Schema({
     require: true,
   },
   isRenew: {
-    type: Boolean,
+    type: String,
     require: true,
   },
   cycle: {
     type: String,
+    require: true,
+  },
+  dueDate:{
+    type: Date,
     require: true,
   },
   category: {

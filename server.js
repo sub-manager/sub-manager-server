@@ -6,6 +6,7 @@ const cors = require("cors");
 const schedule = require("node-schedule");
 const nodeMailer = require("nodemailer");
 const moment = require("moment");
+const format = require('date-fns');
 
 const server = express();
 
@@ -40,54 +41,71 @@ server.use("/api/user", authRouter);
 const postRouter = require("./routes/postsRoutes");
 server.use("/api/post", postRouter);
 
-
 // CATEGORY ROUTE - API
 const categoryRouter = require("./routes/categoryRoutes");
-server.use("/api/category", categoryRouter);
+server.use("/api/user/category", categoryRouter);
 
 //
 server.get("/", (req, res) => {
   res.status(200).json({ success: "server is running" });
 });
 
-async function sendEmails(email) {
+async function sendEmails(subscription) {
   let transporter = nodeMailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
     secure: true,
     auth: {
-      user: "mosabalbishi@gmail.com",
-      pass: "xoxdfdbeuobzfybb",
+      user: process.env.USER,
+      pass: process.env.APP_PASSWORD,
     },
   });
 
+
   await transporter.sendMail({
-    from: '"musab" <mosabalbishi@gmail.com>',
-    to: email,
-    subject: "Testing, testing, 123",
+    from: `"sub manager" <${process.env.USER}>`,
+    to: subscription.user.email,
+    subject: "subscription renewal",
     html: `
-    <h1>Hello there</h1>
-    <p>Isn't NodeMailer useful?</p>
+    
+    <h1>Hello,${subscription.user.username} </h1>
+    <P> Your subscription to ${subscription.providerName} will renew 7 days from now, on
+    Thursday, 22 June 2023.
+    
+    The value of this subscription is ${subscription.value} SAR per month.
+    
+    Visit your subscriptions homepage.</P>
     `,
   });
 }
 
+
 const job = () => {
-  schedule.scheduleJob("* * * * *", async () => {
+  schedule.scheduleJob("1 10 * * *", async () => {
     const subscription = await Subscription.find().populate("user");
     subscription.forEach((sub) => {
-      const myDate = moment.utc(sub.date).format("YYYY-MM-DD");
-      const currDate = moment.utc(Date.now()).format("YYYY-MM-DD");
-      if (myDate === currDate) {
-        sendEmails(sub.user.email);
+      const due_date = moment.utc(sub.dueDate).format('YYYY-MM-DD');
+      const currDate = moment.utc(Date.now()).format('YYYY-MM-DD');
+      console.log(`due: ${due_date}`);
+      console.log(`current: ${currDate}`);
+      if (due_date === currDate) {
+        sendEmails(sub);
+        console.log('email sent');
+      }else{
+        console.log('email wasnt sent');
+
       }
     });
   });
 };
 
-]job();
+job();
 
-console.log(job);
+
+
+
+
+
 
 server.listen(process.env.PORT, () => {
   console.log(`server is up and running on port: ${process.env.PORT}`);

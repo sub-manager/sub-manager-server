@@ -1,23 +1,55 @@
-const User = require("../models/User");
 const Subscription = require("../models/Subscription");
 const Category = require("../models/Category");
-const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
 module.exports = {
-  //
-
-  //
-  addCategory: (req, res) => {
-    const categoryName = req.body.categoryName;
-
-    const addCate = async () => {
-      const newCategory = await new Category({
-        categoryName,
+  allCategory: (req, res) => {
+    User.findById(res.locals.user._id)
+      .populate({
+        path: "subscription",
+        populate: {
+          path: "category",
+        },
+      })
+      .then((foundSubscription) => {
+        const subArr = foundSubscription.subscription;
+        const allCategoryArr = [];
+        for (sub of subArr) {
+          const All = {
+            provider_name: sub.providerName,
+            subscription_date: sub.date,
+            subscription_value: sub.value,
+            subscription_cycle: sub.cycle,
+          };
+          allCategoryArr.push(All);
+        }
+        res.json(allCategoryArr);
       });
-      await newCategory.save();
-      res.json("Folder Successfully Added ");
-    };
+  },
 
-    addCate();
+  sportCategory: (req, res) => {
+    User.findById(res.locals.user._id)
+      .populate({
+        path: "subscription",
+        populate: {
+          path: "category",
+        },
+      })
+      .then((foundSubscription) => {
+        const subArr = foundSubscription.subscription;
+        const sportCategoryArr = [];
+        for (sub of subArr) {
+          if (sub.category.categoryName == "Sport") {
+            const sportCate = {
+              provider_name: sub.providerName,
+              subscription_date: sub.date,
+              subscription_value: sub.value,
+              subscription_cycle: sub.cycle,
+            };
+            sportCategoryArr.push(sportCate);
+          }
+        }
+        res.json(sportCategoryArr);
+      });
   },
 };

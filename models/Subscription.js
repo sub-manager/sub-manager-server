@@ -15,14 +15,17 @@ const subscriptionSchema = new Schema({
     require: true,
   },
   value: {
-    type: Number,
+    type: String,
     require: true,
   },
   isRenew: {
     type: Boolean,
     require: true,
   },
-
+  cycle: {
+    type: String,
+    require: true,
+  },
   category: {
     type: Schema.Types.ObjectId,
     ref: "Category",

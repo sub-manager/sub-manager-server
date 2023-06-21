@@ -5,6 +5,6 @@ const { verifyUser } = require("../middleware/verifyUser");
 
 //
 
-router.post("/addCategory", verifyUser, categoryController.addCategory);
+router.post("/addCategory", verifyUser, categoryController.allCategory);
 
 module.exports = router;

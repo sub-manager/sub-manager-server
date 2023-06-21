@@ -1,23 +1,57 @@
 const User = require("../models/User");
 const Subscription = require("../models/Subscription");
 const Category = require("../models/Category");
-const jwt = require("jsonwebtoken");
-const schedule = require("node-schedule");
 const moment = require("moment");
+const format = require('date-fns');
+const addDays = require('date-fns/addDays');
+const { from } = require("form-data");
 
 module.exports = {
   //
-
+  getSubscription: async (req, res) => {
+    const user = await User.findById(res.locals.user._id).populate(
+      "subscription"
+    );
+    res.json(user);
+  },
   //
   addSubscription: async (req, res) => {
+    const cycle = req.body.cycle; 
+    let dueDate = null;
+    if (cycle === 'monthly') {
+      dueDate = format.add(new Date(req.body.date),{
+        days: 23,
+      })
+    }
+    if (cycle === 'weekly') {
+      dueDate = format.add(new Date(req.body.date),{
+        days: 5,
+      })
+    }
+    if (cycle === 'yearly') {
+      dueDate = format.add(new Date(req.body.date),{
+        days: 355,
+      })      
+    } 
+    dueDate = format.format(dueDate, 'yyyy-MM-dd')
+
+    
+
+
     const newSub = await Subscription.create(
+      
       {
         user: res.locals.user._id,
         providerName: req.body.providerName,
         isRenew: req.body.isRenew,
         date: req.body.date,
-      },
-    );
+        value: req.body.value,
+        cycle,
+        dueDate,
+        
+      },      
+    );   
+
 
     await User.findByIdAndUpdate(res.locals.user._id, {
       $addToSet: {
@@ -43,5 +77,16 @@ module.exports = {
       },
     });
     res.json(deletedSub);
+  },
+
+
+  updateSubscription: async (req, res) => {
+    const updatedSub = await Subscription.findByIdAndUpdate(req.params.subId, {
+      providerName: req.body.providerName,
+      isRenew: req.body.isRenew,
+      date: req.body.date,
+    });
+
+    res.json(updatedSub);
   },
 };

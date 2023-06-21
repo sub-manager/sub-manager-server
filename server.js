@@ -3,7 +3,12 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const schedule = require("node-schedule");
+const nodeMailer = require("nodemailer");
+const moment = require("moment");
+
 const server = express();
+
 const bodyParser = require("body-parser");
 server.use(bodyParser.urlencoded({ extended: true }));
 
@@ -14,13 +19,6 @@ server.use(
     origin: "*",
   })
 );
-const JWT = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-
-// BCRYPT REQUIREMENTS
-const saltRound = process.env.SALT;
-const saltRounds = Number(saltRound);
-//
 
 mongoose
   .connect(process.env.DB)
@@ -32,9 +30,7 @@ mongoose
   });
 
 // MODELS
-const User = require("./models/User");
 const Subscription = require("./models/Subscription");
-const Category = require("./models/Category");
 server.use(cookieParser());
 
 // USER ROUTER - API
@@ -43,6 +39,7 @@ server.use("/api/user", authRouter);
 
 const postRouter = require("./routes/postsRoutes");
 server.use("/api/post", postRouter);
+
 
 // CATEGORY ROUTE - API
 const categoryRouter = require("./routes/categoryRoutes");
@@ -53,20 +50,44 @@ server.get("/", (req, res) => {
   res.status(200).json({ success: "server is running" });
 });
 
-// create user
-server.post("/auth/signup", async (req, res) => {
-  const { username, email, phone, password } = req.body;
-  const createdUser = await User.create({
-    username,
-    email,
-    phone,
-    password,
+async function sendEmails(email) {
+  let transporter = nodeMailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: "mosabalbishi@gmail.com",
+      pass: "xoxdfdbeuobzfybb",
+    },
   });
-  res.status(200).json(createdUser);
-});
 
-// login user
-server.post("/auth/login", (req, res) => {});
+  await transporter.sendMail({
+    from: '"musab" <mosabalbishi@gmail.com>',
+    to: email,
+    subject: "Testing, testing, 123",
+    html: `
+    <h1>Hello there</h1>
+    <p>Isn't NodeMailer useful?</p>
+    `,
+  });
+}
+
+const job = () => {
+  schedule.scheduleJob("* * * * *", async () => {
+    const subscription = await Subscription.find().populate("user");
+    subscription.forEach((sub) => {
+      const myDate = moment.utc(sub.date).format("YYYY-MM-DD");
+      const currDate = moment.utc(Date.now()).format("YYYY-MM-DD");
+      if (myDate === currDate) {
+        sendEmails(sub.user.email);
+      }
+    });
+  });
+};
+
+]job();
+
+console.log(job);
 
 server.listen(process.env.PORT, () => {
   console.log(`server is up and running on port: ${process.env.PORT}`);

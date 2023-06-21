@@ -10,20 +10,26 @@ const subscriptionSchema = new Schema({
     type: String,
     require: true,
   },
-  isRenew: {
-    type: Boolean,
-    require: true,
-  },
   date: {
     type: String,
     require: true,
   },
-  category: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Category",
-    },
-  ],
+  value: {
+    type: String,
+    require: true,
+  },
+  isRenew: {
+    type: Boolean,
+    require: true,
+  },
+  cycle: {
+    type: String,
+    require: true,
+  },
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: "Category",
+  },
 });
 
 const Subscription = mongoose.model("Subscription", subscriptionSchema);

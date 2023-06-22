@@ -81,7 +81,7 @@ async function sendEmails(subscription) {
 
 
 const job = () => {
-  schedule.scheduleJob("1 10 * * *", async () => {
+  schedule.scheduleJob("* * * * *", async () => {
     const subscription = await Subscription.find().populate("user");
     subscription.forEach((sub) => {
       const due_date = moment.utc(sub.dueDate).format('YYYY-MM-DD');
@@ -99,7 +99,7 @@ const job = () => {
   });
 };
 
-job();
+// job();
 
 
 

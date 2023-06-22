@@ -14,7 +14,7 @@ const subscriptionSchema = new Schema({
     type: String,
     require: true,
   },
-  value: {
+  valuee: {
     type: String,
     require: true,
   },

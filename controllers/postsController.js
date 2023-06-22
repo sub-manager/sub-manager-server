@@ -4,7 +4,7 @@ const Category = require("../models/Category");
 const moment = require("moment");
 const format = require('date-fns');
 const addDays = require('date-fns/addDays');
-const { from } = require("form-data");
+// const { from } = require("form-data");
 
 module.exports = {
   //
@@ -12,7 +12,7 @@ module.exports = {
     const user = await User.findById(res.locals.user._id).populate(
       "subscription"
     );
-    res.json(user);
+    res.status(200).json({foundUser: user});
   },
   //
   addSubscription: async (req, res) => {
@@ -33,22 +33,20 @@ module.exports = {
         days: 355,
       })      
     } 
+    console.log(req.body.date);
+    console.log(dueDate);
+    console.log(cycle);
     dueDate = format.format(dueDate, 'yyyy-MM-dd')
 
-    
-
-
     const newSub = await Subscription.create(
-      
       {
         user: res.locals.user._id,
         providerName: req.body.providerName,
         isRenew: req.body.isRenew,
         date: req.body.date,
-        value: req.body.value,
+        valuee: req.body.valuee,
         cycle,
         dueDate,
-        
       },      
     );   
 
@@ -65,7 +63,7 @@ module.exports = {
       },
     });
 
-    res.json({ newSub });
+    res.status(200).json({ newSubscription: newSub });
  
   },
 
@@ -73,10 +71,10 @@ module.exports = {
     const deletedSub = await Subscription.findByIdAndDelete(req.params.subId);
     await User.findByIdAndUpdate(res.locals.user._id, {
       $pull: {
-        subscription: deletedSub._id,
+        subscription: req.params.subId,
       },
     });
-    res.json(deletedSub);
+    res.status(200).json({message: 'subscription deleted'});
   },
 
 
@@ -85,8 +83,9 @@ module.exports = {
       providerName: req.body.providerName,
       isRenew: req.body.isRenew,
       date: req.body.date,
+      valuee: req.body.valuee,
     });
 
-    res.json(updatedSub);
+    res.status(200).json({message: 'subscription updated'});
   },
 };

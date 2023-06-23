@@ -6,15 +6,12 @@ const cors = require("cors");
 const schedule = require("node-schedule");
 const nodeMailer = require("nodemailer");
 const moment = require("moment");
-const format = require('date-fns');
 
 const server = express();
 
 const bodyParser = require("body-parser");
 server.use(bodyParser.urlencoded({ extended: true }));
-
 server.use(express.json());
-
 server.use(
   cors({
     origin: "*",
@@ -30,23 +27,19 @@ mongoose
     console.log(e);
   });
 
-// MODELS
 const Subscription = require("./models/Subscription");
-server.use(cookieParser());
 
-// USER ROUTER - API
 const authRouter = require("./routes/authRoutes");
 server.use("/api/user", authRouter);
 
 const postRouter = require("./routes/postsRoutes");
 server.use("/api/post", postRouter);
 
-// CATEGORY ROUTE - API
 const categoryRouter = require("./routes/categoryRoutes");
 server.use("/api/user/category", categoryRouter);
 
 //
-server.get("/", (req, res) => {
+server.get("/test", (req, res) => {
   res.status(200).json({ success: "server is running" });
 });
 
@@ -71,9 +64,7 @@ async function sendEmails(subscription) {
     <h1>Hello,${subscription.user.username} </h1>
     <P> Your subscription to ${subscription.providerName} will renew 7 days from now, on
     Thursday, 22 June 2023.
-    
     The value of this subscription is ${subscription.value} SAR per month.
-    
     Visit your subscriptions homepage.</P>
     `,
   });
@@ -81,7 +72,7 @@ async function sendEmails(subscription) {
 
 
 const job = () => {
-  schedule.scheduleJob("* * * * *", async () => {
+  schedule.scheduleJob("57  10 * * *", async () => {
     const subscription = await Subscription.find().populate("user");
     subscription.forEach((sub) => {
       const due_date = moment.utc(sub.dueDate).format('YYYY-MM-DD');
@@ -99,7 +90,7 @@ const job = () => {
   });
 };
 
-// job();
+job();
 
 
 

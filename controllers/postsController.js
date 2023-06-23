@@ -3,8 +3,6 @@ const Subscription = require("../models/Subscription");
 const Category = require("../models/Category");
 const moment = require("moment");
 const format = require('date-fns');
-const addDays = require('date-fns/addDays');
-// const { from } = require("form-data");
 
 module.exports = {
   //
@@ -12,7 +10,7 @@ module.exports = {
     const user = await User.findById(res.locals.user._id).populate(
       "subscription"
     );
-    res.status(200).json({foundUser: user});
+    res.status(200).json(user);
   },
   //
   addSubscription: async (req, res) => {
@@ -33,9 +31,6 @@ module.exports = {
         days: 355,
       })      
     } 
-    console.log(req.body.date);
-    console.log(dueDate);
-    console.log(cycle);
     dueDate = format.format(dueDate, 'yyyy-MM-dd')
 
     const newSub = await Subscription.create(

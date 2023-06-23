@@ -1,14 +1,13 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const Category = require("../models/Category");
 const dotenv = require("dotenv").config();
 
 const verifyUser = async (req, res, next) => {
+  console.log(req.headers.authorization);
   const authHeader = req.headers.authorization;
 
   const token = authHeader?.split(" ")[1];
 
-  // const token = authHeader.split("")[1];
   if (!token) return res.status(401).send("Access Denied");
 
   try {
